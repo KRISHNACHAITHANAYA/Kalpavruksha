@@ -1,19 +1,7 @@
 import { GoogleGenAI, Type } from '@google/genai';
 import { PredictionResult, Coordinates, Expert, Language } from '../types';
 
-// Use Vite's import.meta.env instead of process.env
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
-// Debug logs
-console.log('🔗 API URL:', API_URL);
-console.log('🔑 Gemini API Key:', GEMINI_API_KEY ? '✅ Set' : '❌ Not set');
-
-if (!GEMINI_API_KEY) {
-  console.error('❌ VITE_GEMINI_API_KEY is not set in environment variables!');
-}
-
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY || '' });
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY! });
 
 const diseaseAnalysisSchema = {
   type: Type.OBJECT,
@@ -38,6 +26,7 @@ const diseaseAnalysisSchema = {
   },
   required: ['isHealthy', 'diseaseType', 'severity', 'confidence'],
 };
+
 
 const expertsSchema = {
     type: Type.ARRAY,
@@ -102,14 +91,18 @@ export const analyzeWithGemini = async (base64Image: string, mimeType: string) =
   }
 };
 
+
+/**
+ * Calls the custom Flask backend to get a prediction from the PyTorch model.
+ * @param imageFile The image file to be analyzed.
+ * @returns A promise that resolves to the prediction result.
+ */
 export const analyzeWithCustomModel = async (imageFile: File): Promise<{ prediction: string; confidence: number }> => {
   const formData = new FormData();
   formData.append('file', imageFile);
 
   try {
-    console.log('📤 Sending request to:', `${API_URL}/predict`);
-    
-    const response = await fetch(`${API_URL}/predict`, {
+        const response = await fetch('http://127.0.0.1:5000/predict', {
       method: 'POST',
       body: formData,
     });
@@ -121,15 +114,15 @@ export const analyzeWithCustomModel = async (imageFile: File): Promise<{ predict
     }
 
     const result = await response.json();
-    console.log('✅ Analysis result:', result);
     return result;
   } catch (error) {
-    console.error('❌ Error calling custom model:', error);
+    console.error('Error calling custom model:', error);
     throw error;
   }
 };
 
 export const getTreatmentRecommendation = async (diseaseType: string, lang: Language): Promise<string> => {
+  // Normalize strings for matching (case/spacing/punctuation/known typos)
   const normalizeKey = (s: string) =>
     (s || '')
       .toLowerCase()
@@ -144,6 +137,11 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
   };
   const languageName = languageMap[lang] || 'English';
 
+  // Map disease keywords to recommended products. Supports:
+  // - string URL
+  // - array of URLs
+  // - single object { name, url? }
+  // - array of objects { name, url? }
   const productLinks: Record<string, string | string[] | { name: string; url?: string } | Array<{ name: string; url?: string }>> = {
     'bud root dropping': 'https://cultree.in/products/shivalik-roksin-thiophanate-methyl-70-wp-fungicide',
     'bud rot': 'https://cultree.in/products/shivalik-roksin-thiophanate-methyl-70-wp-fungicide',
@@ -154,7 +152,8 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
       "http://www.rayfull.com/Productshows.asp?ID=338",
       "https://krishisevakendra.in/products/bordeaux-mixture"
     ],
-    'caterpillars': { name: 'Phoskill Insecticide-(Upl)' },
+    // New classes from second YOLO model
+    'caterpillars': { name: 'Phoskill Insecticide-(Upl)' }, // shown without link if URL not provided
     'drying': [
       { name: 'Potassium Nitrate (KNO3)' },
       { name: 'THE WET TREE Bio Larvicide (Bacillus Thuringiensis Var Kurstaki) Liquid | Bio Pesticide | Insecticide for Plants 500ml', url: ' https://amzn.in/d/0FqYTFA ' }
@@ -171,6 +170,7 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
   };
 
   const getStaticProducts = (): Array<{ name: string; url?: string }> => {
+    // Resolve static mapping into a list of items for the current disease
     const dNorm = normalizeKey(diseaseType);
     const key = Object.keys(productLinks).find(k => {
       const kNorm = normalizeKey(k);
@@ -192,23 +192,29 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
     return `\n\n**Recommended Products:**\n${lines}`;
   };
 
+  // Try dynamic products mapping from public/data/products.json
   let productMarkdown = '';
   try {
+    // Merge products from three sources in priority:
+    // 1) localStorage additions, 2) static mapping in code, 3) JSON file
     const dNorm = normalizeKey(diseaseType);
     let merged: any = { items: [] };
 
+    // Load static JSON
     const resp = await fetch('/data/products.json');
     if (resp.ok) {
       const data = await resp.json();
       merged.items = Array.isArray(data.items) ? data.items : [];
     }
 
+    // Load localStorage additions
     let lsProducts: Array<{ name: string; url?: string }> = [];
     try {
       const raw = localStorage.getItem('cg-products');
       if (raw) {
         const ls = JSON.parse(raw);
         const lsItems = Array.isArray(ls.items) ? ls.items : [];
+        // Merge: for each ls item, append products to same key or add new key
         lsItems.forEach((lsItem: any) => {
           const key = String(lsItem.key);
           const keyNorm = normalizeKey(key);
@@ -226,14 +232,17 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
         }
       }
     } catch {}
-    
+    // From static mapping in code
     const staticProducts = getStaticProducts();
+
+    // From JSON file (as a fallback/augment)
     const entryJson = (merged.items || []).find((it: any) => {
       const kNorm = normalizeKey(String(it.key));
       return dNorm.includes(kNorm) || kNorm.includes(dNorm);
     });
     const jsonProducts: Array<{ name: string; url?: string }> = entryJson && Array.isArray(entryJson.products) ? entryJson.products : [];
 
+    // Combine with priority and dedupe by name|url
     const combined = [...lsProducts, ...staticProducts, ...jsonProducts]
       .map(p => ({ name: (p?.name || '').trim(), url: p?.url ? String(p.url).trim() : undefined }))
       .filter(p => p.name);
@@ -246,9 +255,10 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
     });
     productMarkdown = renderMarkdown(unique);
   } catch (e) {
-    // ignore
+    // ignore and fallback to static mapping
   }
   if (!productMarkdown) {
+    // Fall back to static-only rendering if nothing found anywhere
     productMarkdown = renderMarkdown(getStaticProducts());
   }
 
@@ -265,16 +275,24 @@ export const getTreatmentRecommendation = async (diseaseType: string, lang: Lang
       });
       return response.text.trim();
     } catch (error) {
-      console.error(`Attempt ${i + 1} failed:`, error);
+      console.error(`Attempt ${i + 1} failed to get treatment recommendation for ${diseaseType}:`, error);
       if (i === maxRetries - 1) {
+        // Last attempt failed, return error message
         return "Could not retrieve treatment recommendation at this time due to server overload. Please try again later.";
       }
+      // Wait before retrying with exponential backoff
       await new Promise(res => setTimeout(res, 1000 * Math.pow(2, i)));
     }
   }
+
+  // This part should be unreachable if the loop is correct, but as a fallback:
   return "Could not retrieve treatment recommendation at this time.";
 };
 
+
+/**
+ * Finds local experts based on coordinates using a generative model.
+ */
 export const findLocalExperts = async (coordinates: Coordinates, diseaseInfo: string, lang: Language): Promise<Expert[]> => {
     const languageMap: Record<Language, string> = {
       [Language.ENGLISH]: 'English',
@@ -330,6 +348,7 @@ User's question: "${prompt}"`;
 
 export const getPlaceName = async (lat: number, lon: number): Promise<string> => {
   try {
+    // Using Nominatim API for reverse geocoding
     const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
     if (!response.ok) {
       console.error('Failed to fetch place name from Nominatim');
