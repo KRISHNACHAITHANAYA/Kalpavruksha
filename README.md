@@ -1,132 +1,344 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+@"
+# Kalpavruksha - AI-Powered Coconut Disease Detection
 
-# Run and deploy your AI Studio app
+Early detection of coconut diseases using advanced AI models (Dual YOLO + Gemini LLM).
 
-This contains everything you need to run your app locally.
+## 🌴 Features
 
-View your app in AI Studio: https://ai.studio/apps/temp/2
+- **Dual YOLO Models**: Detect 11 different coconut diseases with high accuracy
+  - Model 1: Detection model (5 diseases with bounding boxes)
+  - Model 2: Classification model (6 diseases + pest detection)
+- **Gemini AI Integration**: Get AI-powered treatment recommendations
+- **Multi-language Support**: English, Kannada, Tamil, Telugu, Malayalam
+- **Expert Finder**: Connect with agricultural experts near you
+- **Product Management**: Curated treatment products with purchase links
+- **Voice Assistant**: Audio diagnosis and treatment recommendations
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Scroll Animations**: Smooth fade-in effects on page scroll
 
-## Run Locally
+## 🎯 Detected Diseases
 
-**Prerequisites:**  Node.js
+**Model 1 (Object Detection):**
+- Bud Root Dropping
+- Bud Rot
+- Gray Leaf Spot
+- Leaf Rot
+- Stem Bleeding
 
+**Model 2 (Image Classification):**
+- Caterpillars (Pest Infestation)
+- Drying / Leaf Drying
+- Flaccidity (Plant Wilting)
+- Healthy
+- Leaflet Damage
+- Yellowing (Nutrient Deficiency)
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## 🛠️ Tech Stack
 
-## Full setup (frontend + backend)
+### Frontend
+- **React 18** + TypeScript
+- **Vite** (Lightning fast build tool)
+- **Tailwind CSS** (Responsive design)
+- **Lucide React** (Beautiful icons)
+- **EmailJS** (Contact form integration)
 
-This project has a frontend (React + Vite/TypeScript) and a small Flask backend used for the local PyTorch model prediction.
+### Backend
+- **Flask** with CORS support
+- **PyTorch** + **Ultralytics YOLO**
+- **Python 3.8+**
 
-1) Frontend
+### AI/ML
+- **YOLOv5/v8** Object Detection
+- **YOLOv8** Image Classification
+- **Google Gemini API** (LLM for recommendations)
 
-- Prereqs: Node.js 18+ and npm (or pnpm/yarn). Open PowerShell.
-- Install dependencies:
+## 📋 Prerequisites
 
-```powershell
+Before you begin, ensure you have installed:
+- **Node.js** 16+ ([Download](https://nodejs.org/))
+- **Python** 3.8+ ([Download](https://www.python.org/))
+- **Git** ([Download](https://git-scm.com/))
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+
+\`\`\`bash
+git clone https://github.com/YOUR_USERNAME/kalpavruksha.git
+cd kalpavruksha
+\`\`\`
+
+### 2. Frontend Setup
+
+\`\`\`bash
+# Install dependencies
 npm install
-```
 
-- Create a local environment file `.env.local` in the project root (if not already present) and add the following environment variables:
-
-```text
-# API key used by the Google/GenAI client in the frontend
-API_KEY=<your_gemini_api_key_or_service_key>
-
-# (Optional) if you use a differently named key in other tools
-GEMINI_API_KEY=<your_gemini_api_key>
-```
-
-- Start the dev server (PowerShell):
-
-```powershell
+# Start development server (runs on http://localhost:5173)
 npm run dev
-```
 
-The frontend will be served by Vite (usually at http://localhost:5173).
-
-2) Backend (optional, for the custom PyTorch model)
-
-- Prereqs: Python 3.10+ and pip.
-- Create and activate a virtual environment (PowerShell):
-
-```powershell
-python -m venv .venv; .\.venv\Scripts\Activate.ps1
-```
-
-- Install backend requirements:
-
-```powershell
-pip install -r backend/requirements.txt
-```
-
-- The backend expects model weights in `backend/weights/` (already present in this repo). Start the Flask app:
-
-```powershell
-python backend\app.py
-```
-
-By default the backend listens on `http://127.0.0.1:5000` and the frontend calls `http://127.0.0.1:5000/predict` for the custom model.
-
-## Environment variables summary
-
-- `API_KEY` (used by the frontend Google GenAI client)
-- `GEMINI_API_KEY` (optional alias)
-
-Set these either in `.env.local` (frontend) or in your shell environment when running the backend.
-
-## Translations / "placeholder key" issues
-
-If you see translation keys (for example `expertFinderTitle`, `contactTitle`, `welcomeTitle`) displayed instead of readable text, do the following:
-
-1. Open `localization/translations.ts` and confirm the keys exist and contain values for all supported languages (en, kn, ta, te, ml).
-2. The translations shape expects an object of keys where each key maps to an object with these properties: `en`, `kn`, `ta`, `te`, `ml`.
-   Example entry:
-
-```ts
-export const translations = {
-  welcomeTitle: {
-    en: 'Your Coconut Health Partner',
-    kn: 'ನಿಮ್ಮ ತೆಂಗಿನ ಆರೋಗ್ಯ ಪಾಲುದಾರ',
-    ta: 'உங்கள் தென்னை சுகாதார கூட்டாளர்',
-    te: 'మీ కొబ్బరి ఆరోగ్య భాగస్వామి',
-    ml: 'നിങ്ങളുടെ തെങ്ങ് ആരോഗ്യ പങ്കാളി',
-  },
-  // ... other keys
-}
-```
-
-3. If keys are missing, add them to `localization/translations.ts` with the `en` value at minimum. Then restart the dev server.
-4. If the file contains syntax errors (unterminated strings, missing commas or braces) the app may fail to build — fix the syntax and restart Vite.
-
-Common translation keys used in the app: `expertFinderTitle`, `expertFinderIntro`, `expertFinderSearchPlaceholder`, `expertFinderButton`, `contactTitle`, `contactIntro`, `welcomeTitle`, `getStartedButton`, `productManagementTitle`, etc.
-
-## Troubleshooting
-
-- "Model is overloaded" or 503 errors from Gemini: these are transient. The app includes a retry/backoff mechanism for some calls, but you may still see failures — try again in a few minutes or implement / increase retries where needed.
-
-- Unterminated string literal / build errors after editing translations: open `localization/translations.ts`, check for unclosed quotes and missing `}` at the end of the object. Use your editor's TypeScript/TSLint diagnostics.
-
-- Frontend can't reach backend: ensure Flask is running and that CORS or port configuration are correct. The frontend expects `http://127.0.0.1:5000/predict` for the custom model.
-
-## Build for production
-
-```powershell
+# Build for production
 npm run build
+
+# Preview production build
 npm run preview
-```
+\`\`\`
 
-## Notes and next steps
+### 3. Backend Setup
 
-- If you add new UI text that needs translation, add a new key to `localization/translations.ts` and reference it via the `t(key)` helper used throughout components.
-- To improve resilience against API overloads, you can increase retry counts or add error UI that suggests the user try again later.
+\`\`\`bash
+# Navigate to backend directory
+cd backend
 
-If you'd like, I can:
+# Create virtual environment
+python -m venv venv
 
-- Run a quick scan and automatically add any missing keys found in components to `localization/translations.ts` (I can add English defaults), or
-- Fix the specific translation file errors you encountered (unterminated strings / missing keys) — tell me which you'd prefer.
+# Activate virtual environment
+# On Windows:
+.\venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install Python dependencies
+pip install -r requirements.txt
+
+# Run Flask server (runs on http://localhost:5000)
+python app.py
+\`\`\`
+
+## 🔐 Environment Variables
+
+Create a \`.env.local\` file in the project root:
+
+\`\`\`env
+# Google Gemini API
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+
+# EmailJS Configuration (for contact form)
+VITE_EMAILJS_SERVICE_ID=your_emailjs_service_id
+VITE_EMAILJS_TEMPLATE_ID=your_emailjs_template_id
+VITE_EMAILJS_PUBLIC_KEY=your_emailjs_public_key
+\`\`\`
+
+### How to Get API Keys:
+
+**Gemini API Key:**
+1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Copy and paste in \`.env.local\`
+
+**EmailJS Setup:**
+1. Sign up at [EmailJS](https://www.emailjs.com/)
+2. Create an email service and template
+3. Get your credentials from the dashboard
+
+## 📁 Project Structure
+
+\`\`\`
+kalpavruksha/
+├── src/
+│   ├── components/          # React components
+│   │   ├── Header.tsx
+│   │   ├── HomeView.tsx     # Image upload & analysis
+│   │   ├── AboutView.tsx
+│   │   ├── ContactView.tsx
+│   │   ├── ExpertView.tsx
+│   │   ├── ProductManagementView.tsx
+│   │   └── ...
+│   ├── services/            # API & business logic
+│   │   ├── analysisService.ts
+│   │   ├── yoloService.ts
+│   │   └── ...
+│   ├── localization/        # Multi-language support
+│   │   └── translations.ts
+│   ├── types.ts             # TypeScript types
+│   ├── App.tsx              # Main app component
+│   └── main.tsx
+├── backend/
+│   ├── app.py               # Flask server
+│   ├── yolo_model.py        # YOLO model loader
+│   ├── bestcoconutdisease.pt # Model 1 (Detection)
+│   ├── best.pt              # Model 2 (Classification)
+│   └── requirements.txt
+├── public/
+│   ├── assets/
+│   │   ├── logo.webp
+│   │   ├── coconut-plantation.webp
+│   │   ├── team/            # Owner photos
+│   │   └── ...
+│   ├── data/
+│   │   └── products.json    # Treatment products
+│   └── index.html
+├── .env.local               # Environment variables (create this)
+├── .gitignore
+├── README.md
+├── package.json
+├── tsconfig.json
+└── vite.config.ts
+\`\`\`
+
+## 📖 How to Use
+
+### 1. **Analyze Coconut Leaf Image**
+   - Go to "Detect Disease" section
+   - Upload a clear image of the affected leaf
+   - Choose analysis model:
+     - **Gemini**: Cloud-based AI
+     - **Local**: PyTorch model
+     - **Combined YOLO**: Both YOLO models together
+   - Get instant diagnosis with confidence score
+
+### 2. **Get Treatment Recommendations**
+   - After analysis, view recommended products
+   - Click links to purchase products directly
+   - Read treatment guidelines from Gemini AI
+
+### 3. **Find Local Experts**
+   - Enable location services
+   - View agricultural experts near you
+   - Contact them for personalized advice
+
+### 4. **Manage Products**
+   - Admin: Go to Product Management
+   - Add treatment products by disease category
+   - Include purchase links for easy shopping
+
+### 5. **Contact Us**
+   - Fill contact form with your inquiry
+   - Messages are sent via EmailJS
+   - Get timely responses from the team
+
+## 🔧 Backend API Endpoints
+
+### Disease Analysis
+- **POST** `/predict` - Run dual YOLO models on image
+  - Body: FormData with 'image' file
+  - Response: `{ prediction, confidence, all_detections, total_diseases }`
+
+- **POST** `/predict-yolo` - First YOLO model only
+- **POST** `/predict-yolo2` - Second YOLO model only
+
+## 🌐 Multi-Language Support
+
+Supported languages:
+- English (en)
+- ಕನ್ನಡ (kn) - Kannada
+- தமிழ் (ta) - Tamil
+- తెలుగు (te) - Telugu
+- മലയാളം (ml) - Malayalam
+
+Switch languages from the header language dropdown.
+
+## 📊 Product Data Structure
+
+Products are stored in \`public/data/products.json\`:
+
+\`\`\`json
+{
+  "bud rot": [
+    {
+      "name": "Fungicide Name",
+      "url": "https://purchase-link.com"
+    }
+  ],
+  "caterpillars": [
+    {
+      "name": "Phoskill Insecticide-(Upl)",
+      "url": "https://amzn.in/..."
+    }
+  ]
+}
+\`\`\`
+
+## 🎨 UI Features
+
+- **Glassmorphism Design**: Modern frosted glass effect cards
+- **Scroll Reveal Animations**: Elements fade in as you scroll
+- **Responsive Grid**: Adapts to all screen sizes
+- **Dark Theme**: Easy on the eyes with green accents
+- **Blurred Background**: Beautiful coconut plantation imagery
+
+## 🚨 Troubleshooting
+
+### Issue: "Models loading slowly"
+- **Solution**: Models are large files. First load takes time. Consider using Git LFS for faster clones.
+
+### Issue: "YOLO model not found"
+- **Solution**: Ensure \`.pt\` files are in \`backend/\` directory:
+  - \`backend/bestcoconutdisease.pt\`
+  - \`backend/best.pt\`
+
+### Issue: "API key errors"
+- **Solution**: Check \`.env.local\` exists and has correct API keys
+- Restart dev server after adding environment variables
+
+### Issue: "Flask CORS errors"
+- **Solution**: Make sure Flask is running on port 5000 and frontend on port 5173
+
+### Issue: "Products not showing in recommendations"
+- **Solution**: Check \`public/data/products.json\` format is correct
+- Verify disease names match (normalized matching included)
+
+## 📦 Model Files
+
+The YOLO model files are large (>100MB each). They are:
+- **Not** included in the repository (added to .gitignore)
+- Should be stored locally in the \`backend/\` folder
+- Can optionally be tracked with [Git LFS](https://git-lfs.com/)
+
+To add Git LFS support:
+\`\`\`bash
+git lfs install
+git lfs track "*.pt"
+git add .gitattributes
+git commit -m "Add Git LFS for model files"
+\`\`\`
+
+## 🤝 Contributing
+
+Contributions are welcome! Here's how:
+
+1. Fork the repository
+2. Create a feature branch (\`git checkout -b feature/amazing-feature\`)
+3. Commit changes (\`git commit -m 'Add amazing feature'\`)
+4. Push to branch (\`git push origin feature/amazing-feature\`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Team
+
+**Kalpavruksha Project** - AI-Powered Coconut Disease Detection System
+
+- Project Lead: [Your Name]
+- Contributors: [List contributors]
+- Website: [https://www.kalpavruksha.in](https://www.kalpavruksha.in)
+
+## 📞 Support & Contact
+
+- **Issues**: Open a [GitHub Issue](https://github.com/YOUR_USERNAME/kalpavruksha/issues)
+- **Questions**: Use [GitHub Discussions](https://github.com/YOUR_USERNAME/kalpavruksha/discussions)
+- **Email**: contact@kalpavruksha.in
+
+## 🙏 Acknowledgments
+
+- Google Gemini API for LLM capabilities
+- Ultralytics for YOLO implementation
+- React community for amazing tools
+
+## 📚 Resources
+
+- [React Documentation](https://react.dev/)
+- [Vite Documentation](https://vitejs.dev/)
+- [Ultralytics YOLO](https://docs.ultralytics.com/)
+- [Flask Documentation](https://flask.palletsprojects.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+
+---
+
+**Made with ❤️ for coconut farmers worldwide**
+
+Last Updated: December 2024
+"@ | Out-File README.md -Encoding UTF8
