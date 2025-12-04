@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*# Create .gitignore to exclude unnecessary files
+echo "node_modules/
+.env
+.env.local
+dist/
+build/
+.DS_Store
+*.log
+.vscode/
+.idea/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+backend/venv/
+backend/.env
+backend/__pycache__/
+backend/*.pt
+public/assets/team/*.jpg
+public/assets/team/*.png" > .gitignore
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

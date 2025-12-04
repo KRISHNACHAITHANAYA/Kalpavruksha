@@ -1,0 +1,29 @@
+/* Hero specific utility (if not relying solely on Tailwind) */
+.hero-section::before {
+	/* Fallback if image fails to load: subtle gradient */
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(135deg, rgba(0,0,0,0.7), rgba(0,0,0,0.4));
+	z-index: -20;
+}
+
+/* Simple fade-in animation reused */
+@keyframes fade-in {
+	from { opacity: 0; transform: translateY(4px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in { animation: fade-in 0.6s ease-out; }
+
+/* Scroll reveal classes */
+.reveal {
+	opacity: 0;
+	transform: translateY(24px);
+	transition: opacity 0.7s ease, transform 0.7s ease;
+	will-change: opacity, transform;
+}
+.reveal-visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+

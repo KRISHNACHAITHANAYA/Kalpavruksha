@@ -1,0 +1,8 @@
+
+{
+  "name": "Kalpavruksha",
+  "description": "An AI-powered application to detect diseases in coconut trees, estimate severity, and provide treatment recommendations using image analysis and GPS integration.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}

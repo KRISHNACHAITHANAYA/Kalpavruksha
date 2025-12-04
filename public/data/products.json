@@ -1,0 +1,32 @@
+{
+  "$schema": "https://example.com/coconut-guardian/products.schema.json",
+  "version": 1,
+  "items": [
+    { "key": "bud root dropping", "products": [ { "name": "Shivalik Roksin (Thiophanate-methyl 70% WP)", "url": "https://cultree.in/products/shivalik-roksin-thiophanate-methyl-70-wp-fungicide" } ] },
+    { "key": "bud rot", "products": [ { "name": "Shivalik Roksin (Thiophanate-methyl 70% WP)", "url": "https://cultree.in/products/shivalik-roksin-thiophanate-methyl-70-wp-fungicide" } ] },
+    { "key": "gray leaf spot", "products": [ { "name": "Agriventure Cooxy", "url": "https://www.bighaat.com/products/agriventure-cooxy" } ] },
+    { "key": "leaf rot", "products": [ { "name": "Hexaconazole 5% w/w (Jahaan)", "url": "https://ariesagro.com/jahaan-hexaconazole5-w-w/" } ] },
+    { "key": "stembleeding", "products": [
+      { "name": "Blue Copper Fungicide", "url": "https://www.bighaat.com/products/blue-copper-fungicide-1" },
+      { "name": "Bordeaux Mixture", "url": "https://krishisevakendra.in/products/bordeaux-mixture" }
+    ] },
+
+    { "key": "caterpillars", "products": [ { "name": "Phoskill Insecticide-(Upl)" } ] },
+    { "key": "drying", "products": [
+      { "name": "Potassium Nitrate (KNO3)" },
+      { "name": "Drip irrigation scheduling guide", "url": "https://farmer.gov.in/irrigation" }
+    ] },
+    { "key": "flaccidity", "products": [
+      { "name": "Zinc + Boron foliar spray" },
+      { "name": "Soil moisture management best practices", "url": "https://icar.org.in" }
+    ] },
+    { "key": "leaflet", "products": [
+      { "name": "Copper oxychloride fungicide" },
+      { "name": "Rogor Insecticide - Dimethoate 30% EC (250 ml)", "url": "https://share.google/t1QmVne4AGQHQ4JSB" }
+    ] },
+    { "key": "yellowing", "products": [
+      { "name": "Ferrous sulphate (Fe) correction" },
+      { "name": "Balanced NPK fertilizer schedule" }
+    ] }
+  ]
+}
