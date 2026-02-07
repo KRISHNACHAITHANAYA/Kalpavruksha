@@ -18,7 +18,12 @@
 
 ## 🎯 Detected Diseases
 
- 
+ **Model 1 (Object Detection):**
+- Bud Root Dropping
+- Bud Rot
+- Gray Leaf Spot
+- Leaf Rot
+- Stem Bleeding
 
 **Model 2 (Image Classification):**
 - Caterpillars (Pest Infestation)
