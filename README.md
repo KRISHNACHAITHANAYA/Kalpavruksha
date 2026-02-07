@@ -16,22 +16,7 @@
 - **Responsive Design**: Works on desktop, tablet, and mobile
 - **Scroll Animations**: Smooth fade-in effects on page scroll
 
-## 🎯 Detected Diseases
-
- **Model 1 (Object Detection):**
-- Bud Root Dropping
-- Bud Rot
-- Gray Leaf Spot
-- Leaf Rot
-- Stem Bleeding
-
-**Model 2 (Image Classification):**
-- Caterpillars (Pest Infestation)
-- Drying / Leaf Drying
-- Flaccidity (Plant Wilting)
-- Healthy
-- Leaflet Damage
-- Yellowing (Nutrient Deficiency)
+ 
 
 ## 🛠️ Tech Stack
 
