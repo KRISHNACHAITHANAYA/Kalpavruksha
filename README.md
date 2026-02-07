@@ -1,7 +1,7 @@
 @"
 # Kalpavruksha - AI-Powered Coconut Disease Detection
 
- 
+ Early detection of coconut diseases using advanced AI models (Dual YOLO + Gemini LLM).
 
 ## 🌴 Features
 
