@@ -177,6 +177,16 @@ kalpavruksha/
 └── vite.config.ts
 \`\`\`
 
+## 🌐 Multi-Language Support
+
+Supported languages:
+- English (en)
+- ಕನ್ನಡ (kn) - Kannada
+- தமிழ் (ta) - Tamil
+- తెలుగు (te) - Telugu
+- മലയാളം (ml) - Malayalam
+
+Switch languages from the header language dropdown.
 ## 📖 How to Use
 
 ### 1. **Analyze Coconut Leaf Image**
