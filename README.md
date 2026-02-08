@@ -218,16 +218,7 @@ kalpavruksha/
 - **POST** `/predict-yolo` - First YOLO model only
 - **POST** `/predict-yolo2` - Second YOLO model only
 
-## 🌐 Multi-Language Support
 
-Supported languages:
-- English (en)
-- ಕನ್ನಡ (kn) - Kannada
-- தமிழ் (ta) - Tamil
-- తెలుగు (te) - Telugu
-- മലയാളം (ml) - Malayalam
-
-Switch languages from the header language dropdown.
 
 ## 📊 Product Data Structure
 
